@@ -6,7 +6,7 @@
 int main(){
     int depth_increases = 0;
     std::vector<int> depth_measurement;
-    depth_measurement = fileLinesToVector(std::string("input_day1"));
+    depth_measurement = fileLinesToVector(std::string("inputs/input_day1"));
 
     int prev_prev_depth = 0, prev_depth = 0;
     int prev_window = 0, curr_window = 0;

@@ -22,6 +22,5 @@ day1.o: day1.cpp readInput.h
 readInput.o: readInput.cpp readInput.h
 	$(CC) $(CFLAGS) -c readInput.cpp
 
-
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) readInput.o
