@@ -23,4 +23,4 @@ readInput.o: readInput.cpp readInput.h
 	$(CC) $(CFLAGS) -c readInput.cpp
 
 clean:
-	rm -f $(TARGET) readInput.o
+	rm -f $(TARGET) *.o readInput.o
