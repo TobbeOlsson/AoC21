@@ -89,7 +89,6 @@ int main(){
                         it = oxygen.erase(it);
                     }
                     oxy_rate = *it;
-                    it++;
                 } else if (!((*it)[i] - '0' == com)){
                     it = oxygen.erase(it);
                 } else {
