@@ -49,7 +49,7 @@ int main(){
     std::vector<std::string> oxygen = binary;
     std::vector<std::string> co2 = binary;
     bool oxy_rate_found = false, co2_rate_found = false;
-    
+
     int zeroes = 0, ones = 0, oxy_common = 0, co2_common = 0;
     for(int i = 0; i < binary[0].size(); i++){
         for (int j = 0; j < binary.size(); j++){
@@ -93,7 +93,7 @@ int main(){
                     it = oxygen.erase(it);
                 } else {
                     oxy_rate = *it;
-                    it++;                   
+                    it++;
                 }
             }
         }
@@ -116,7 +116,7 @@ int main(){
                     it = co2.erase(it);
                 } else {
                     co2_rate = *it;
-                    it++;                  
+                    it++;
                 }
             }
         }

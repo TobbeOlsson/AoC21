@@ -40,8 +40,8 @@ std::vector<std::string> fileLinesToStringVector(std::string file_path){
     return input;
 }
 
-std::vector<std::pair<std::string, int>> fileLinesToPairVector(std::string file_path){
-    std::vector<std::pair<std::string, int>> input;
+std::vector<std::pair<std::string, int> > fileLinesToPairVector(std::string file_path){
+    std::vector<std::pair<std::string, int> > input;
     std::ifstream in(file_path);
     std::string s;
     int i;
