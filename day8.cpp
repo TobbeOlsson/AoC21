@@ -31,6 +31,7 @@ int main(){
     compare c;
     int final_score = 0;
     std::string detucted_signals[10];
+
     while (std::getline(in, line)){
         std::istringstream ss(line);
         std::vector<std::string> row_of_input;
@@ -38,6 +39,7 @@ int main(){
         std::string s, score;
         std::string detucted_signals[10];
         bool input_end = false;
+
         while (std::getline(ss, s, ' ')){
             if (s == "|"){
                 input_end = true;
@@ -50,11 +52,9 @@ int main(){
             }
         }
         sort(row_of_input.begin(), row_of_input.end(), c);
+
         /* Deduct from input */
         for(std::string signal : row_of_input){
-            if (signal == "|"){
-                break;
-            }
             std::sort(signal.begin(), signal.end());
             /* 2, 3 or 5 */
             if(signal.length() == 5){
@@ -65,7 +65,6 @@ int main(){
                 } else {                                                // else it's a 2
                     detucted_signals[2] = signal;
                 }
-
             } else if (signal.length() == 6){ // 0, 6 or 9
                 if (overlapping(detucted_signals[4], signal) == 4){ //9 overlaps 4 with '4'
                     detucted_signals[9] = signal;
@@ -74,7 +73,7 @@ int main(){
                 } else {                                            // else it's a 6
                     detucted_signals[6] = signal;
                 }
-            } else {
+            } else {  // 1, 4, 7 or 8
                 switch (signal.length()){
                 case 2: detucted_signals[1] = signal; break;
                 case 3: detucted_signals[7] = signal; break;
@@ -85,6 +84,7 @@ int main(){
             }
         }
 
+        /* Compare outputs with deducted numbers to get score */
         for (std::string out_sign : row_of_output) {
             std::sort(out_sign.begin(), out_sign.end());
             for (int i = 0; i < 10; i++){
@@ -93,8 +93,10 @@ int main(){
                 }
             }
         }
+
         final_score += std::stoi(score);
     }
+    
     std::cout << "Sum of all output numbers " << final_score << "\n";
     return 0;
 }
