@@ -3,9 +3,15 @@ CC = g++
 
 CFLAGS  = -g -Wall
 
-TARGET = day1 day2 day3 day4 day5 day6 day7 day8
+TARGET = day1 day2 day3 day4 day5 day6 day7 day8 day9
 
 all: $(TARGET)
+
+day9: day9.o readInput.o
+	$(CC) $(CFLAGS) -o day9 day9.o readInput.o
+
+day9.o: day9.cpp readInput.h
+	$(CC) $(CFLAGS) -c day9.cpp
 
 day8: day8.o readInput.o
 	$(CC) $(CFLAGS) -o day8 day8.o readInput.o
