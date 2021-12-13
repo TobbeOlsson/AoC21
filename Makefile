@@ -7,6 +7,12 @@ TARGET = day1 day2 day3 day4 day5 day6 day7 day8 day9 day10 day11
 
 all: $(TARGET)
 
+day13: day13.o readInput.o
+	$(CC) $(CFLAGS) -o day13 day13.o readInput.o
+
+day13.o: day13.cpp readInput.h
+	$(CC) $(CFLAGS) -c day13.cpp
+
 day11: day11.o readInput.o
 	$(CC) $(CFLAGS) -o day11 day11.o readInput.o
 
