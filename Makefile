@@ -3,9 +3,15 @@ CC = g++
 
 CFLAGS  = -g -fsanitize=address -Wall
 
-TARGET = day1 day2 day3 day4 day5 day6 day7 day8 day9 day10 day11 day13
+TARGET = day1 day2 day3 day4 day5 day6 day7 day8 day9 day10 day11 day13 day14
 
 all: $(TARGET)
+
+day14: day14.o readInput.o
+	$(CC) $(CFLAGS) -o day14 day14.o readInput.o
+
+day14.o: day14.cpp readInput.h
+	$(CC) $(CFLAGS) -c day14.cpp
 
 day13: day13.o readInput.o
 	$(CC) $(CFLAGS) -o day13 day13.o readInput.o
