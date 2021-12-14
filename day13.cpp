@@ -7,15 +7,16 @@
 #include <algorithm>
 #include <queue>
 
-void drawPaper(std::vector<std::pair<int, int>> dots){
-    //should not be static size 15, should be biggest x, 11 biggest y?
-    std::cout << "drawing\n";
-    bool matrix[11][15] = { false };
+void drawPaper(std::vector<std::pair<int, int>> dots, int x_size, int y_size){
+    std::cout << "Drawing....\n";
+    bool matrix[100][100] = { false };
     for (std::pair<int, int> p : dots){
-        matrix[p.first][p.second] = true;
+        if (p.first < x_size && p.second < y_size){
+            matrix[p.first][p.second] = true;
+        }
     }
-    for(int y = 0; y < 15; y++){
-        for(int x = 0; x < 11; x++){
+    for(int y = 0; y < y_size; y++){
+        for(int x = 0; x < x_size; x++){
             if(matrix[x][y]){
                 std::cout << "# ";
             } else {
@@ -27,39 +28,40 @@ void drawPaper(std::vector<std::pair<int, int>> dots){
     std::cout << "\n";
 }
 
-void foldPaper(std::vector<std::pair<int, int>>& dots, std::vector<std::pair<char, int>>& fold_queue){
+void foldPaper(std::vector<std::pair<int, int>>& dots, std::vector<std::pair<char, int>>& fold_queue, int& x_size, int& y_size){
     int fold_line = fold_queue.back().second;
     int newx = 0; int newy = 0;
     if(fold_queue.back().first == 'x'){
         for(int i = 0; i < dots.size(); i++){
-            if(dots[i].first > fold_line){ //move dot left of fold line
-                newx = (fold_line * 2) - dots[i].first;
+            if(dots[i].first > fold_line && dots[i].first <= x_size){ //move dot left of fold line
+                newx = abs((fold_line * 2) - dots[i].first);
                 dots.push_back(std::make_pair(newx, dots[i].second));
-                std::cout << "xxxx\n"; 
             }
         }
+        x_size = x_size / 2;
 
     } else if (fold_queue.back().first == 'y'){
-        std::cout << "yyyy\n";
         for(int i = 0; i < dots.size(); i++){
-            if(dots[i].second > fold_line){ //move dots above of fold line
-                newy = (fold_line * 2) - dots[i].second;
+            if(dots[i].second > fold_line && dots[i].second <= y_size){ //move dots above of fold line
+                newy = abs((fold_line * 2) - dots[i].second);
                 dots.push_back(std::make_pair(dots[i].first, newy));
             }
         }
+        y_size = y_size / 2;
     }
-    std::cout << "after\n"; 
     fold_queue.pop_back();
 }
 
-int countDots(std::vector<std::pair<int, int>> dots){
+int countDots(std::vector<std::pair<int, int>> dots, int x_size, int y_size){
     int dot = 0;
-    bool matrix[11][15] = { false };
+    bool matrix[100][100] = { false };
     for (std::pair<int, int> p : dots){
-        matrix[p.first][p.second] = true;
+        if(p.first < x_size && p.second < y_size){
+            matrix[p.first][p.second] = true;
+        }
     }
-    for(int y = 0; y < 8; y++){
-        for(int x = 0; x < 11; x++){
+    for(int y = 0; y < y_size + 1; y++){
+        for(int x = 0; x < x_size + 1; x++){
             if(matrix[x][y]){
                 dot++;
             }
@@ -69,9 +71,10 @@ int countDots(std::vector<std::pair<int, int>> dots){
 }
 
 int main(){
+    int x_size = 0, y_size = 0;
     std::vector<std::pair<int, int>> dots;
     std::vector<std::pair<char, int>> fold_queue;
-    std::ifstream in("inputs/input_ex13");
+    std::ifstream in("inputs/input_day13");
     std::string line;
 
     while (std::getline(in, line)){
@@ -80,6 +83,12 @@ int main(){
             x_val = line.substr(0, line.find(','));
             y_val = line.substr(line.find(',') + 1, line.find(' '));
             dots.push_back(std::make_pair(std::stoi(x_val), std::stoi(y_val)));
+            if(std::stoi(x_val) > x_size){
+                x_size = std::stoi(x_val);
+            }
+            if(std::stoi(y_val) > y_size){
+                y_size = std::stoi(y_val);
+            }
         }
         if (line.find("fold") != std::string::npos) {
             std::string fold_direction, fold_index;
@@ -89,14 +98,10 @@ int main(){
         }
     }
 
-    //In most funcs I need to keep track of the current size of our paper
-    //therefore not working with bigger input atm. Example working
-
-    drawPaper(dots);
-    foldPaper(dots, fold_queue);
-    std::cout << "num of dots " << countDots(dots) << "\n";
-    drawPaper(dots);
-    foldPaper(dots, fold_queue);
-    drawPaper(dots);
+    while (!fold_queue.empty()){
+        foldPaper(dots, fold_queue, x_size, y_size);
+    }
+    std::cout << "Dots after all folds: " << countDots(dots, x_size, y_size) << "\n";
+    drawPaper(dots, x_size, y_size);
     return 0;
 }
