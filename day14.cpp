@@ -9,8 +9,10 @@
 
 int main(){
     std::map<std::string, char> insertion_table;
+    std::map<std::string, long> number_of_pairs;
+    std::map<char, long> letter_count;
     std::string start_string, current_string;
-    std::ifstream in("inputs/input_ex14");
+    std::ifstream in("inputs/input_day14");
     std::string line;
     int line_num = 0;
     while (std::getline(in, line)){
@@ -21,43 +23,61 @@ int main(){
             letter_pair = line.substr(0, 2);
             insert = line.substr(line.find('>') + 2, 1);
             insertion_table.insert(std::make_pair(letter_pair, insert[0]));
+            number_of_pairs.insert(std::make_pair(letter_pair, 0));
+            if(!(letter_count.find(letter_pair[0]) != letter_count.end())){
+                letter_count.insert(std::make_pair(letter_pair[0], 0));
+                std::cout << "ADDED LETTER " << letter_pair[0] << "\n";
+            }
+            if(!(letter_count.find(letter_pair[1]) != letter_count.end())){
+                letter_count.insert(std::make_pair(letter_pair[1], 0));
+                std::cout << "ADDED LETTER " << letter_pair[1] << "\n";
+            }
         }
         line_num++;
     }
-    current_string = start_string;
-    for(int days = 0; days < 20; days++){
-        start_string = current_string;
-        std::string this_day;
-        for(int i = 0; i < start_string.length() - 1; i++){
-            std::string pair;
-            char insert_char;
-            pair.push_back(start_string[i]); 
-            pair.push_back(start_string[i + 1]);
-            insert_char = insertion_table.at(pair);
 
-            this_day.push_back(pair[0]);
-            this_day.push_back(insert_char);
-
-        }
-        this_day.push_back(start_string[start_string.length() - 1]);
-        current_string = std::move(this_day);
-
+    for(int i = 0; i < start_string.length() - 1; i++){
+        std::string char_pair;
+        char_pair = start_string.substr(i + 0 , 2);
+        letter_count.at(char_pair[0])++;
+        letter_count.at(char_pair[1])++;
+        number_of_pairs.at(char_pair)++;
     }
 
-    std::vector<int> letter_amounts;
-    std::sort(current_string.begin(), current_string.end());
-    int letter_count = 0;
-    for(int i = 0; i < current_string.length() - 1; i++){
-        if(current_string[i] == current_string[i + 1]){
-            letter_count++;
-        } else {
-            letter_count++;
-            letter_amounts.push_back(letter_count);
-            letter_count = 0;
-        }
-    }
-    std::sort(letter_amounts.begin(), letter_amounts.end());
-    std::cout << "Small " << letter_amounts[0] << " Big " << letter_amounts[letter_amounts.size() - 1] << "\n";
-    std::cout << "Result: " << letter_amounts[letter_amounts.size() - 1] - letter_amounts[0] << "\n";
+    //iterate over days
+    for(int days = 0; days < 40; days++){
+        std::map<std::string, long> current_day;
+        for(std::pair<std::string, long> p : number_of_pairs){
+            std::string first_new, second_new;
+            first_new = p.first[0];
+            first_new += insertion_table.at(p.first);
 
+            second_new = insertion_table.at(p.first);
+            second_new += p.first[1];
+
+            if (!(current_day.find(first_new) != current_day.end())){
+                current_day.insert(std::make_pair(first_new, p.second));
+            } else {
+                current_day.at(first_new) += p.second;
+            }
+
+             if (!(current_day.find(second_new) != current_day.end())){
+                current_day.insert(std::make_pair(second_new, p.second));
+            } else {
+                current_day.at(second_new) += p.second;
+            }
+
+            letter_count.at(insertion_table.at(p.first)) += p.second;
+        }
+        number_of_pairs = std::move(current_day);
+    }
+
+    std::vector<long> number_of_letters;
+    for(std::map<char, long>::iterator it = letter_count.begin(); it != letter_count.end(); ++it){
+        number_of_letters.push_back( it->second );
+    }
+    std::sort(number_of_letters.begin(), number_of_letters.end());
+    std::cout << "Small " << number_of_letters[0] << " Big " << number_of_letters[number_of_letters.size() - 1] << "\n";
+    std::cout << "Result: " << number_of_letters[number_of_letters.size() - 1] - number_of_letters[0] << "\n";
+    return 0;
 }
